@@ -1,4 +1,4 @@
-package br.com.zaffari.sinapses.repositories;
+/* br.com.zaffari.sinapses.repositories;
 
 import br.com.zaffari.sinapses.model.Sinapse;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface SinapsesRepository extends JpaRepository<Sinapse, Integer> {
-    List<Sinapse> findSinapseBy_Aluno(Integer matriculaAluno);
-}
+    List<Sinapse> findSinjapseBy_id(Integer Id);
+}*/
