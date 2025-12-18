@@ -1,4 +1,4 @@
-package main.java.br.com.zaffari.sinapses.dtos;
+package br.com.zaffari.sinapses.dtos;
 
 import java.time.LocalDate;
 

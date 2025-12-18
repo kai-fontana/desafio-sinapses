@@ -1,6 +1,12 @@
-package main.java.br.com.zaffari.sinapses.model;
+package br.com.zaffari.sinapses.model;
 
 import java.time.LocalDate;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "sinapse")
@@ -18,7 +24,6 @@ public class Sinapse {
         
     }
 
-    //Getters:
     public int getId() {
         return id;
     }
