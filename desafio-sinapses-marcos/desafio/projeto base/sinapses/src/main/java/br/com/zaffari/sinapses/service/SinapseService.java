@@ -5,7 +5,8 @@ import java.util.List;
 import br.com.zaffari.sinapses.model.Sinapse;
 
 public interface SinapseService {
-    List<Sinapse> mostrarSinapses();
-    void criarSinapse(Sinapse sinapse);
-    void deletarSinapse(int id);
+    List<Sinapse> listarSinapses();
+    Sinapse pegarPorId(Long id);
+    Sinapse salvarSinapse(Sinapse sinapse);
+    void deletarSinapse(Long id);
 }
