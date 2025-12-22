@@ -1,45 +1,47 @@
 package br.com.zaffari.sinapses.model;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+
+import java.util.List;
 
 @Entity(name = "sinapses")
 @Table(name = "sinapses")
 public class Sinapse {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer id;
 
-    @Column
+    @JsonProperty("matricula_aluno")
     protected Integer matriculaAluno;
-
-    @Column
     protected String titulo;
-
-    @Column
     protected String descricao;
-
-    @Column
     protected String categoria;
 
-    @Column
-    protected LocalDate dataDeAprendizado;
+    @JsonProperty("data_de_estudo")
+    protected LocalDate dataDeEstudo;
 
-    @Column
-    protected String fonteDoAprendizado;
+    @JsonProperty("fonte_de_estudo")
+    protected String fonteDeEstudo;
 
+    @JsonProperty("palavras_chave")
+    protected List<String> palavrasChave;
 
-    public Sinapse(Integer id, Integer matriculaAluno, String titulo, String descricao, String categoria, LocalDate dataDeAprendizado, String fonteDoAprendizado) {
+    public Sinapse(Integer id, Integer matriculaAluno, String titulo, String descricao, String categoria, LocalDate dataDeEstudo, String fonteDeEstudo, List<String> palavrasChave) {
         this.id = id;
         this.matriculaAluno = matriculaAluno;
         this.titulo = titulo;
         this.descricao = descricao;
         this.categoria = categoria;
-        this.dataDeAprendizado = dataDeAprendizado;
-        this.fonteDoAprendizado = fonteDoAprendizado;
+        this.dataDeEstudo = dataDeEstudo;
+        this.fonteDeEstudo = fonteDeEstudo;
+        this.palavrasChave = palavrasChave;
     }
+
+
 
     public Integer getId() {
         return id;
@@ -81,19 +83,19 @@ public class Sinapse {
         this.categoria = categoria;
     }
 
-    public LocalDate getDataDeAprendizado() {
-        return dataDeAprendizado;
+    public LocalDate getDataDeEstudo() {
+        return dataDeEstudo;
     }
 
-    public void setDataDeAprendizado(LocalDate dataDeAprendizado) {
-        this.dataDeAprendizado = dataDeAprendizado;
+    public void setDataDeAprendizado(LocalDate dataDeEstudo) {
+        this.dataDeEstudo = dataDeEstudo;
     }
 
-    public String getFonteDoAprendizado() {
-        return fonteDoAprendizado;
+    public String getFonteDoEstudo() {
+        return fonteDeEstudo;
     }
 
-    public void setFonteDoAprendizado(String fonteDoAprendizado) {
-        this.fonteDoAprendizado = fonteDoAprendizado;
+    public void setFonteDoAprendizado(String fonteDeEstudo) {
+        this.fonteDeEstudo = fonteDeEstudo;
     }
 }

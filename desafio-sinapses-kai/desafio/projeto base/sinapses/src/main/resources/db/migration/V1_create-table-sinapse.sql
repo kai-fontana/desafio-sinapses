@@ -7,6 +7,7 @@ CREATE TABLE sinapses (
     categoria VARCHAR(100),
     data_de_aprendizado DATE,
     fonte_do_aprendizado VARCHAR(255),
+    palavras_chave TEXT,
 
     PRIMARY KEY (id, matricula_aluno)
 );
