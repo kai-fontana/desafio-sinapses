@@ -6,7 +6,8 @@ import br.com.zaffari.sinapses.model.Sinapse;
 
 public interface SinapseService {
     List<Sinapse> listarSinapses();
+    List<Sinapse> listarPorCategoria(String categoria);
     Sinapse pegarPorId(Long id);
     Sinapse salvarSinapse(Sinapse sinapse);
-    void deletarSinapse(Long id);
+    void deletarSinapse(Sinapse sinapse);
 }

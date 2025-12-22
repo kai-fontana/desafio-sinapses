@@ -7,24 +7,32 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 
 @Entity
-@Table(name = "sinapse")
+@Table(name = "sinapses")
 public class Sinapse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
+    @NotBlank(message = "O título é obrigatório")
     private String titulo;
     private String descricao;
+    @NotBlank(message = "A categoria é obrigatória")
     private String categoria;
+    @NotNull(message = "A data é obrigatória")
+    @PastOrPresent(message = "A data não pode estar no futuro")
     private LocalDate data;
+    @NotBlank(message = "A URL do conteúdo é obrigatória")
     private String urlConteudo;
 
     public Sinapse(){
         
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
     public String getTitulo() {
@@ -43,5 +51,30 @@ public class Sinapse {
         return urlConteudo;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
+
+    public void setUrlConteudo(String urlConteudo) {
+        this.urlConteudo = urlConteudo;
+    }
+
+    
     
 }
