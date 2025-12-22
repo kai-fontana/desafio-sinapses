@@ -11,3 +11,4 @@ import br.com.zaffari.sinapses.model.Sinapse;
 public interface SinapseRepository extends JpaRepository<Sinapse, Long>{
     List<Sinapse> findByCategoriaOrderByDataAsc(String categoria);
 }
+

@@ -83,3 +83,4 @@ public class SinapseController {
         return ResponseEntity.status(204).build();
     }
 }
+
