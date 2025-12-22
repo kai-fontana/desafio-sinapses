@@ -11,11 +11,23 @@ public class Sinapse {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Integer id;
+
+    @Column
     protected Integer matriculaAluno;
+
+    @Column
     protected String titulo;
+
+    @Column
     protected String descricao;
+
+    @Column
     protected String categoria;
+
+    @Column
     protected LocalDate dataDeAprendizado;
+
+    @Column
     protected String fonteDoAprendizado;
 
 
