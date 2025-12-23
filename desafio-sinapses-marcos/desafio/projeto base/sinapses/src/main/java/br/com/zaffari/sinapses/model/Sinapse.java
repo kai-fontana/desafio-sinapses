@@ -2,10 +2,13 @@ package br.com.zaffari.sinapses.model;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,6 +20,9 @@ public class Sinapse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @ManyToOne
+    @JoinColumn(name = "matricula_aluno")
+    private Aluno aluno;
     @NotBlank(message = "O título é obrigatório")
     private String titulo;
     private String descricao;
@@ -26,10 +32,10 @@ public class Sinapse {
     @PastOrPresent(message = "A data não pode estar no futuro")
     private LocalDate data;
     @NotBlank(message = "A URL do conteúdo é obrigatória")
+    @Column(name = "url_conteudo")
     private String urlConteudo;
 
     public Sinapse(){
-        
     }
 
     public long getId() {

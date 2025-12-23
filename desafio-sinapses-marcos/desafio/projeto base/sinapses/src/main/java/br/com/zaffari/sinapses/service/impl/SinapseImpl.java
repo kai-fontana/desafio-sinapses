@@ -1,5 +1,6 @@
 package br.com.zaffari.sinapses.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Sort;
@@ -25,7 +26,17 @@ public class SinapseImpl implements SinapseService {
 
     @Override
     public List<Sinapse> listarPorCategoria(String categoria){
-        return sinapseRepository.findByCategoriaOrderByDataAsc(categoria);
+        return sinapseRepository.findByCategoriaIgnoreCaseOrderByDataAsc(categoria);
+    }
+
+    @Override
+    public List<Sinapse> listarPorData(LocalDate data){
+        return sinapseRepository.findByDataOrderByDataAsc(data);
+    }
+
+    @Override
+    public List<Sinapse> listarPorPalavraChave(String palavraChave){
+        return sinapseRepository.findByDescricaoContainingIgnoreCase(palavraChave);
     }
 
     @Override

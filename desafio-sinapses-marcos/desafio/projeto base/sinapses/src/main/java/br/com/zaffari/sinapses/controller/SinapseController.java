@@ -1,5 +1,6 @@
 package br.com.zaffari.sinapses.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -30,10 +31,16 @@ public class SinapseController {
 
 
     @GetMapping
-    public ResponseEntity<List<Sinapse>> listarSinapses(@RequestParam(required = false) String categoria){
+    public ResponseEntity<List<Sinapse>> listarSinapses(@RequestParam(required = false) String categoria, 
+    @RequestParam(required = false) LocalDate data,
+    @RequestParam(required = false) String palavraChave){
         List<Sinapse> listaSinapses;
         if (categoria != null) {
             listaSinapses = sinapseService.listarPorCategoria(categoria);
+        } else if (data != null) {
+            listaSinapses = sinapseService.listarPorData(data);
+        } else if (palavraChave != null){
+            listaSinapses = sinapseService.listarPorPalavraChave(palavraChave);
         } else {
            listaSinapses = sinapseService.listarSinapses();
         }
@@ -56,19 +63,21 @@ public class SinapseController {
     public ResponseEntity<Sinapse> criarSinapse (@Valid @RequestBody SinapseDto sinapseDto){
         Sinapse sinapse = new Sinapse();
         BeanUtils.copyProperties(sinapseDto, sinapse);
+        sinapse.setData(LocalDate.now());
         Sinapse sinapseSalva = sinapseService.salvarSinapse(sinapse);
         return ResponseEntity.status(201).body(sinapseSalva);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Sinapse> editarSinapse(@PathVariable(value = "id") Long id, 
-        @Valid @RequestBody SinapseDto sinapseDto){
+    @Valid @RequestBody SinapseDto sinapseDto){
         Sinapse sinapse = sinapseService.pegarPorId(id);
          if (sinapse == null) {
             return ResponseEntity.status(404).build();
         }
         BeanUtils.copyProperties(sinapseDto, sinapse);
         sinapse.setId(id);
+        sinapse.setData(LocalDate.now());
         Sinapse sinapseAtualida = sinapseService.salvarSinapse(sinapse);
         return ResponseEntity.ok().body(sinapseAtualida);
     }
