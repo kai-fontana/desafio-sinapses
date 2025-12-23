@@ -1,5 +1,6 @@
 package br.com.zaffari.sinapses.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Sort;
@@ -24,10 +25,25 @@ public class SinapseImpl implements SinapseService {
     }
 
     @Override
+    public List<Sinapse> listarPorCategoria(String categoria){
+        return sinapseRepository.findByCategoriaIgnoreCaseOrderByDataAsc(categoria);
+    }
+
+    @Override
+    public List<Sinapse> listarPorData(LocalDate data){
+        return sinapseRepository.findByDataOrderByDataAsc(data);
+    }
+
+    @Override
+    public List<Sinapse> listarPorPalavraChave(String palavraChave){
+        return sinapseRepository.findByDescricaoContainingIgnoreCase(palavraChave);
+    }
+
+    @Override
     public Sinapse pegarPorId(Long id){
         return sinapseRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Id " + id + " não encontrado."));
-}
+        .orElse(null);
+    }
 
     @Override
     public Sinapse salvarSinapse(Sinapse sinapse) {
@@ -35,9 +51,10 @@ public class SinapseImpl implements SinapseService {
     }
 
     @Override
-    public void deletarSinapse(Long id){
-        sinapseRepository.deleteById(id);
+    public void deletarSinapse(Sinapse sinapse){
+        sinapseRepository.delete(sinapse);
     }
     
 
 }
+
