@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 import java.util.List;
 
+
 @Entity(name = "sinapses")
 @Table(name = "sinapses")
 public class Sinapse {
@@ -28,9 +29,9 @@ public class Sinapse {
     protected String fonteDeEstudo;
 
     @JsonProperty("palavras_chave")
-    protected List<String> palavrasChave;
+    protected String palavrasChave;
 
-    public Sinapse(Integer id, Integer matriculaAluno, String titulo, String descricao, String categoria, LocalDate dataDeEstudo, String fonteDeEstudo, List<String> palavrasChave) {
+    public Sinapse(Integer id, Integer matriculaAluno, String titulo, String descricao, String categoria, LocalDate dataDeEstudo, String fonteDeEstudo, String palavrasChave) {
         this.id = id;
         this.matriculaAluno = matriculaAluno;
         this.titulo = titulo;

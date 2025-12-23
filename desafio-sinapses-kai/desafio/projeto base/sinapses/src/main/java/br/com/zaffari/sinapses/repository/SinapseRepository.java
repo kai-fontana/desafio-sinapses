@@ -1,4 +1,4 @@
-package br.com.zaffari.sinapses.repositories;
+package br.com.zaffari.sinapses.repository;
 
 import br.com.zaffari.sinapses.model.Sinapse;
 import org.springframework.data.jpa.repository.JpaRepository;

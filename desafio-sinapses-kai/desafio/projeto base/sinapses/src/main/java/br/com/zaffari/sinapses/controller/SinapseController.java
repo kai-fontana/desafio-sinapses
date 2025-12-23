@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.zaffari.sinapses.model.Sinapse;
-import br.com.zaffari.sinapses.repositories.SinapseRepository;
+import br.com.zaffari.sinapses.repository.SinapseRepository;
 import br.com.zaffari.sinapses.service.impl.SinapseImpl;
 
 @RestController

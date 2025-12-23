@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 
 import br.com.zaffari.sinapses.model.Sinapse;
-import br.com.zaffari.sinapses.repositories.SinapseRepository;
+import br.com.zaffari.sinapses.repository.SinapseRepository;
 import br.com.zaffari.sinapses.service.SinapseService;
 
 import java.util.List;
