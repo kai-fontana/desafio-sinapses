@@ -1,13 +1,12 @@
 CREATE TABLE sinapses (
-    id INT NOT NULL AUTO_INCREMENT,
-    matricula_aluno INT NOT NULL,
+    id INT PRIMARY KEY UNIQUE AUTO_INCREMENT,
 
-    titulo VARCHAR(255) NOT NULL,
-    descricao TEXT,
-    categoria VARCHAR(100),
-    data_de_aprendizado DATE,
-    fonte_do_aprendizado VARCHAR(255),
-    palavras_chave TEXT,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    category VARCHAR(100),
+    date DATE,
+    link VARCHAR(255),
+    keyword TEXT,
 
-    PRIMARY KEY (id, matricula_aluno)
+    PRIMARY KEY (id)
 );
