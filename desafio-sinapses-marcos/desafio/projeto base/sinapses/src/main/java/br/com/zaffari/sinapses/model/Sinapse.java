@@ -21,7 +21,7 @@ public class Sinapse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @ManyToOne
-    @JoinColumn(name = "matricula_aluno")
+    @JoinColumn(name = "aluno_matricula", referencedColumnName = "matricula")
     private Aluno aluno;
     @NotBlank(message = "O título é obrigatório")
     private String titulo;
@@ -81,6 +81,13 @@ public class Sinapse {
         this.urlConteudo = urlConteudo;
     }
 
+    public Aluno getAluno() {
+        return aluno;
+    }
+
+    public void setAluno(Aluno aluno) {
+        this.aluno = aluno;
+    }
     
     
 }

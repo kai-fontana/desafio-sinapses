@@ -1,0 +1,5 @@
+CREATE TABLE alunos (
+    id SERIAL PRIMARY KEY,
+    matricula VARCHAR(20) UNIQUE NOT NULL,
+    nome VARCHAR(100) NOT NULL
+);

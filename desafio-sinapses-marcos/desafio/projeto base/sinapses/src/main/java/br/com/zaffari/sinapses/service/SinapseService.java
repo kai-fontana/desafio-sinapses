@@ -6,11 +6,11 @@ import java.util.List;
 import br.com.zaffari.sinapses.model.Sinapse;
 
 public interface SinapseService {
-    List<Sinapse> listarSinapses();
+    List<Sinapse> listarSinapsesPorMatricula(String matricula);
     List<Sinapse> listarPorCategoria(String categoria);
     List<Sinapse> listarPorData(LocalDate data);
     List<Sinapse> listarPorPalavraChave(String palavraChave);
-    Sinapse pegarPorId(Long id);
+    Sinapse pegarPorIdPermitido(Long id, String matricula);
     Sinapse salvarSinapse(Sinapse sinapse);
     void deletarSinapse(Sinapse sinapse);
 }

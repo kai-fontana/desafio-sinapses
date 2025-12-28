@@ -3,8 +3,10 @@ package br.com.zaffari.sinapses.service.impl;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import br.com.zaffari.sinapses.model.Sinapse;
 import br.com.zaffari.sinapses.repository.SinapseRepository;
@@ -19,9 +21,8 @@ public class SinapseImpl implements SinapseService {
     }
 
     @Override
-    public List<Sinapse> listarSinapses() {
-        Sort sort = Sort.by("data").ascending();
-        return sinapseRepository.findAll(sort);
+    public List<Sinapse> listarSinapsesPorMatricula(String matricula) {
+        return sinapseRepository.findByAlunoMatricula(matricula);
     }
 
     @Override
@@ -40,9 +41,19 @@ public class SinapseImpl implements SinapseService {
     }
 
     @Override
-    public Sinapse pegarPorId(Long id){
-        return sinapseRepository.findById(id)
+    public Sinapse pegarPorIdPermitido(Long id, String matricula){
+        Sinapse sinapse = sinapseRepository.findById(id)
         .orElse(null);
+
+        if (sinapse == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id não encontrado");
+        }
+
+        if (!sinapse.getAluno().getMatricula().equals(matricula)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Id vinculado a outra matrícula");
+        }
+        
+        return sinapse;
     }
 
     @Override
