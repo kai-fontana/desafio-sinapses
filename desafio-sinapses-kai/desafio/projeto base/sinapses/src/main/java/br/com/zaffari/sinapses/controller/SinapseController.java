@@ -1,6 +1,7 @@
 package br.com.zaffari.sinapses.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.zaffari.sinapses.domain.Sinapse;
 import br.com.zaffari.sinapses.domain.RequestSinapse;
 import br.com.zaffari.sinapses.repository.SinapseRepository;
+import jakarta.transaction.Transactional;
 
 
 /*
@@ -31,10 +33,10 @@ public class SinapseController {
     @GetMapping
     public ResponseEntity getAllSinapses() {
         var allSinapses = sinapseRepository.findAll();
+        System.out.println(allSinapses);
         return ResponseEntity.ok(allSinapses);
     }
 
-    /*  PRECISO CORRIGIR O SAVE  */
     @PostMapping
     public ResponseEntity createSinapse(@RequestBody RequestSinapse data) {
         
@@ -46,22 +48,30 @@ public class SinapseController {
 
 
     /* PRECISO CORRIGIR ESSE ENDPOINT */
-    @PutMapping
-    public ResponseEntity updateSinapse(@RequestBody RequestSinapse data) {
-        Sinapse sinapse = sinapseRepository.getReferenceById(data.id());
-        sinapse.setTitle(data.title());
-        sinapse.setDescription(data.description());
-        sinapse.setCategory(data.category());
-        sinapse.setDate(data.date());
-        sinapse.setLink(data.link());
-        sinapse.setKeyword(data.keyword());
-        return ResponseEntity.ok(sinapse);
-    }
-
-    // PRECISO CORRIGIR ESSE ENDPOINT */
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteSinapse(@PathVariable("id") Sinapse id) {
-        Sinapse sinapse = sinapseRepository.delete(id);
-        return ResponseEntity.ok(sinapse);
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity updateSinapse(@PathVariable(name = "id") @RequestBody RequestSinapse data) {
+        Optional<Sinapse> optionalSinapse = sinapseRepository.findById(data.id());
+        if(optionalSinapse.isPresent()) {
+            Sinapse sinapse = optionalSinapse.get();
+            sinapse.setTitle(data.title());
+            sinapse.setDescription(data.description());
+            sinapse.setCategory(data.category());
+            sinapse.setDate(data.date());
+            sinapse.setLink(data.link());
+            sinapse.setKeyword(data.keyword());
+            return ResponseEntity.ok(sinapse);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+        
     }
 }
+
+    // PRECISO CORRIGIR ESSE ENDPOINT */
+//     @DeleteMapping("/{id}")
+//     public ResponseEntity deleteSinapse(@PathVariable("id") Sinapse id) {
+//         //Sinapse sinapse = sinapseRepository.delete(id);
+//         return ResponseEntity.ok(sinapse);
+//     }
+

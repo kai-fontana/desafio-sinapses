@@ -10,8 +10,8 @@ import java.time.LocalDate;
 public class Sinapse {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    protected Long id;
 
     protected Integer registration;
     protected String title;
@@ -24,7 +24,7 @@ public class Sinapse {
 
     protected String keyword;
 
-    public Sinapse(Integer id, Integer registration, String title, String description, String category, LocalDate date,
+    public Sinapse(Long id, Integer registration, String title, String description, String category, LocalDate date,
     String link, String keyword) {
         this.id = id;
         this.registration = registration;
@@ -41,6 +41,7 @@ public class Sinapse {
         this.id = requestSinapse.id();
         this.title = requestSinapse.title();
         this.description = requestSinapse.description();
+        this.registration = requestSinapse.registration();
         this.category = requestSinapse.category();
         this.date  = requestSinapse.date();
         this.link = requestSinapse.link();
@@ -48,12 +49,12 @@ public class Sinapse {
     }
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
