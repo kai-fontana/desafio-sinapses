@@ -53,6 +53,7 @@ public class SinapseImpl implements SinapseService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Id vinculado a outra matrícula");
         }
         
+        
         return sinapse;
     }
 
