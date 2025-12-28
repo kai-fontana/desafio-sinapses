@@ -15,3 +15,4 @@ public interface SinapseRepository extends JpaRepository<Sinapse, Long>{
     List<Sinapse> findByDescricaoContainingIgnoreCase(String palavraChave);
     List<Sinapse> findByAlunoMatricula(String matricula);
 }
+

@@ -59,7 +59,6 @@ public class Aluno {
     public void setMatricula(String matricula) {
         this.matricula = matricula;
     }
-    
-    
 
 }
+
