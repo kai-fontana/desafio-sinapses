@@ -1,33 +1,48 @@
-// package br.com.zaffari.sinapses.domain;
+package br.com.zaffari.sinapses.domain;
 
-// import jakarta.persistence.*;
+import java.util.List;
 
-// @Table(name = "alunos")
-// @Entity(name = "alunos")
-// public class Aluno {
+import jakarta.persistence.*;
 
-//     protected Integer matricula;
-//     protected String nome;
+@Table(name = "alunos")
+@Entity(name = "alunos")
+public class Aluno {
 
-//     public Aluno(Integer matricula, String nome) {
-//         this.matricula = matricula;
-//         this.nome = nome;
-//     }
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    protected Long matricula;
+    protected String nome;
 
-
-//     public Integer getMatricula() {
-//         return matricula;
-//     }
-//     public void setMatricula(Integer matricula) {
-//         this.matricula = matricula;
-//     }
-//     public String getNome() {
-//         return nome;
-//     }
-//     public void setNome(String nome) {
-//         this.nome = nome;
-//     }
-
+    @OneToMany
+    protected List<Sinapse> sinapses;
     
+    public Aluno() {}
 
-// }
+    public Aluno(Long matricula, String nome, List<Sinapse> sinapses) {
+        this.matricula = matricula;
+        this.nome = nome;
+        this.sinapses = sinapses;
+    }
+
+    public Aluno(RequestAluno requestAluno) {
+        this.matricula = requestAluno.matricula();
+        this.nome = requestAluno.nome();
+        this.sinapses = requestAluno.sinapses();
+    }
+
+
+    public Long getMatricula() {
+        return matricula;
+    }
+    public void setMatricula(Long matricula) {
+        this.matricula = matricula;
+    }
+    public String getNome() {
+        return nome;
+    }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+
+}

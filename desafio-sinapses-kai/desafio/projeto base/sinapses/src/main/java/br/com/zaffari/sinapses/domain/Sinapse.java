@@ -13,41 +13,47 @@ public class Sinapse {
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
 
-    protected Integer registration;
-    protected String title;
-    protected String description;
-    protected String category;
+    protected Integer matricula;
 
-    protected LocalDate date;
+    @ManyToOne
+    protected Aluno aluno;
+
+    protected String titulo;
+    protected String descricao;
+    protected String categoria;
+
+    protected LocalDate data;
+    protected Boolean ativo;
 
     protected String link;
-
     protected String keyword;
 
     public Sinapse() {}
 
-    public Sinapse(Long id, Integer registration, String title, String description, String category, LocalDate date,
-    String link, String keyword) {
+    public Sinapse(Long id, Integer matricula, String titulo, String descricao, String categoria, LocalDate data,
+    String link, String keyword, Boolean ativo) {
         this.id = id;
-        this.registration = registration;
-        this.title = title;
-        this.description = description;
-        this.category = category;
-        this.date = date;
+        this.matricula = matricula;
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.categoria = categoria;
+        this.data = data;
         this.link = link;
         this.keyword = keyword;
+        this.ativo = ativo;
     }
 
 
     public Sinapse(RequestSinapse requestSinapse){
         this.id = requestSinapse.id();
-        this.title = requestSinapse.title();
-        this.description = requestSinapse.description();
-        this.registration = requestSinapse.registration();
-        this.category = requestSinapse.category();
-        this.date  = requestSinapse.date();
+        this.titulo = requestSinapse.titulo();
+        this.descricao = requestSinapse.descricao();
+        this.matricula = requestSinapse.matricula();
+        this.categoria = requestSinapse.categoria();
+        this.data  = requestSinapse.data();
         this.link = requestSinapse.link();
         this.keyword = requestSinapse.keyword();
+        this.ativo = requestSinapse.ativo();
     }
 
 
@@ -61,53 +67,53 @@ public class Sinapse {
     }
 
 
-    public Integer getRegistration() {
-        return registration;
+    public Integer getMatricula() {
+        return matricula;
     }
 
 
-    public void setRegistration(Integer registration) {
-        this.registration = registration;
+    public void setMatricula(Integer matricula) {
+        this.matricula = matricula;
     }
 
 
-    public String getTitle() {
-        return title;
+    public String getTitulo() {
+        return titulo;
     }
 
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
 
-    public String getDescription() {
-        return description;
+    public String getDescricao() {
+        return descricao;
     }
 
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
 
-    public String getCategory() {
-        return category;
+    public String getCategoria() {
+        return categoria;
     }
 
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
     }
 
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDate getData() {
+        return data;
     }
 
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setData(LocalDate data) {
+        this.data = data;
     }
 
 
@@ -130,6 +136,11 @@ public class Sinapse {
         this.keyword = keyword;
     }
 
-    
+    public Boolean getAtivo() {
+        return ativo;
+    }
 
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
 }

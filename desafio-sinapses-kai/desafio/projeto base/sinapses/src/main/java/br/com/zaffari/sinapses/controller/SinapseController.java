@@ -31,7 +31,7 @@ public class SinapseController {
 
     @GetMapping
     public ResponseEntity getAllSinapses() {
-        var allSinapses = sinapseRepository.findAll();
+        var allSinapses = sinapseRepository.findAllByActiveTrue();
         System.out.println(allSinapses);
         return ResponseEntity.ok(allSinapses);
     }
@@ -42,11 +42,9 @@ public class SinapseController {
         Sinapse sinapse = new Sinapse(data);
         if (data != null) {
             sinapseRepository.save(sinapse);
-            System.out.println("deu bom");
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok("Sinapse criada com sucesso.");
             
         } else {
-            System.out.println("deu ruim");
             return ResponseEntity.notFound().build();
         }
     
@@ -58,27 +56,37 @@ public class SinapseController {
         Optional<Sinapse> optionalSinapse = sinapseRepository.findById(id);
         if(optionalSinapse.isPresent()) {
             Sinapse sinapse = optionalSinapse.get();
-            sinapse.setTitle(data.title());
-            sinapse.setDescription(data.description());
-            sinapse.setCategory(data.category());
-            sinapse.setRegistration(data.registration());
-            sinapse.setDate(data.date());
+            sinapse.setTitulo(data.titulo());
+            sinapse.setDescricao(data.descricao());
+            sinapse.setCategoria(data.categoria());
+            sinapse.setMatricula(data.matricula());
+            sinapse.setData(data.data());
             sinapse.setLink(data.link());
             sinapse.setKeyword(data.keyword());
             sinapseRepository.save(sinapse);
-            return ResponseEntity.ok(sinapse);
+            return ResponseEntity.ok("Sinapse atualizada com sucesso.");
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-
-    /* PRECISO CORRIGIR ESSE ENDPOINT */
   @DeleteMapping("/{id}")
     public ResponseEntity deleteSinapse(@PathVariable("id") Long id) {
-        Sinapse sinapse = sinapseRepository.findById(id)
+        Optional<Sinapse> optionalSinapse = sinapseRepository.findById(id);
+        if(optionalSinapse.isPresent()) {
+            Sinapse sinapse = optionalSinapse.get();
+            sinapse.setAtivo(false);
+   
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
+
+
+        /* Sinapse sinapse = sinapseRepository.findById(id)
         .orElse(null);
         sinapseRepository.delete(sinapse);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Sinapse excluída com sucesso."); */
     }
 }
