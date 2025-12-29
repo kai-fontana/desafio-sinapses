@@ -4,3 +4,4 @@ public record SinapseDto(String titulo, String descricao,
     String categoria, String urlConteudo) {
 
 }
+

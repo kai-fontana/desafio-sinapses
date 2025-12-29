@@ -1,5 +1,7 @@
 package br.com.zaffari.sinapses.service.impl;
 
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Service;
 
 import br.com.zaffari.sinapses.model.Aluno;
@@ -16,7 +18,18 @@ public class AlunoImpl implements AlunoService {
 
     @Override
     public Aluno salvarAluno(Aluno aluno){
+        String ano = String.valueOf(LocalDate.now().getYear());
+        long proximoNumero = alunoRepository.count() + 1;
+        String geracaoMatricula = ano + "-" + String.format("%04d", proximoNumero);
+        aluno.setMatricula(geracaoMatricula);
         return alunoRepository.save(aluno);
     }
 
+    @Override
+    public Aluno pegarPorMatricula(String matricula){
+        return alunoRepository.findByMatricula(matricula);
+    }
+
 }
+
+

@@ -2,6 +2,8 @@ package br.com.zaffari.sinapses.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,25 +13,19 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "sinapses")
+@Table(name = "alunos")
 public class Aluno {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int matricula;
+    private long id;
+    String matricula;
     @NotBlank(message = "O nome não pode estar vazio")
     private String nome;
     @OneToMany(mappedBy = "aluno")
+    @JsonIgnore
     private List<Sinapse> sinapsesAluno;
 
     public Aluno() {
-    }
-
-    public int getMatricula() {
-        return matricula;
-    }
-
-    public void setMatricula(int matricula) {
-        this.matricula = matricula;
     }
 
     public String getNome() {
@@ -47,7 +43,22 @@ public class Aluno {
     public void setSinapsesAluno(List<Sinapse> sinapsesAluno) {
         this.sinapsesAluno = sinapsesAluno;
     }
-    
-    
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getMatricula() {
+        return matricula;
+    }
+
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
+    }
 
 }
+

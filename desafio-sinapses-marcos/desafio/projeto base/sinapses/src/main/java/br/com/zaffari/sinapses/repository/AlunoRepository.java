@@ -7,5 +7,6 @@ import br.com.zaffari.sinapses.model.Aluno;
 
 @Repository
 public interface AlunoRepository extends JpaRepository<Aluno, Long> {
-    
+    Aluno findByMatricula(String matricula);
 }
+

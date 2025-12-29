@@ -4,4 +4,6 @@ import br.com.zaffari.sinapses.model.Aluno;
 
 public interface AlunoService {
     Aluno salvarAluno(Aluno aluno);
+    Aluno pegarPorMatricula(String matricula);
 }
+
