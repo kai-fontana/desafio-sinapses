@@ -24,6 +24,8 @@ public class Sinapse {
 
     protected String keyword;
 
+    public Sinapse() {}
+
     public Sinapse(Long id, Integer registration, String title, String description, String category, LocalDate date,
     String link, String keyword) {
         this.id = id;
