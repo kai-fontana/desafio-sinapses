@@ -1,48 +1,56 @@
-package br.com.zaffari.sinapses.domain;
+// package br.com.zaffari.sinapses.domain;
 
-import java.util.List;
+// //import java.util.List;
 
-import jakarta.persistence.*;
+// import jakarta.persistence.*;
 
-@Table(name = "alunos")
-@Entity(name = "alunos")
-public class Aluno {
+// @Table(name = "alunos")
+// @Entity(name = "alunos")
+// public class Aluno {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    protected Long matricula;
-    protected String nome;
+//     /*@Id
+//     @GeneratedValue(strategy = GenerationType.AUTO)
+//     protected Long matricula;*/
+//     protected String nome;
 
-    @OneToMany
-    protected List<Sinapse> sinapses;
+//     /*@OneToMany
+//     protected List<Sinapse> sinapses;*/
     
-    public Aluno() {}
+//     public Aluno() {}
 
-    public Aluno(Long matricula, String nome, List<Sinapse> sinapses) {
-        this.matricula = matricula;
-        this.nome = nome;
-        this.sinapses = sinapses;
-    }
+//     public Aluno(String nome) {
+//         this.nome = nome;
+//     }
 
-    public Aluno(RequestAluno requestAluno) {
-        this.matricula = requestAluno.matricula();
-        this.nome = requestAluno.nome();
-        this.sinapses = requestAluno.sinapses();
-    }
+//     public Aluno(RequestAluno requestAluno) {
+//         this.nome = requestAluno.nome();
+//     }
 
+//     /*public Aluno(Long matricula, String nome, List<Sinapse> sinapses) {
+//         this.matricula = matricula;
+//         this.nome = nome;
+//         this.sinapses = sinapses;
+//     }*/
 
-    public Long getMatricula() {
-        return matricula;
-    }
-    public void setMatricula(Long matricula) {
-        this.matricula = matricula;
-    }
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+//     /*public Aluno(RequestAluno requestAluno) {
+//         this.matricula = requestAluno.matricula();
+//         this.nome = requestAluno.nome();
+//         this.sinapses = requestAluno.sinapses();
+//     }*/
 
 
-}
+//     /*public Long getMatricula() {
+//         return matricula;
+//     }
+//     public void setMatricula(Long matricula) {
+//         this.matricula = matricula;
+//     }*/
+//     public String getNome() {
+//         return nome;
+//     }
+//     public void setNome(String nome) {
+//         this.nome = nome;
+//     }
+
+
+// }

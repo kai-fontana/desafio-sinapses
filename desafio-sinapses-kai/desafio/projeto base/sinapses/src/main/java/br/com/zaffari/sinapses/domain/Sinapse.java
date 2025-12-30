@@ -3,26 +3,31 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
-/*PRECISO FAZER UM DTO*/
-
 @Entity(name = "sinapses")
 @Table(name = "sinapses")
 public class Sinapse {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gerador_id")
+    @SequenceGenerator (
+        name="gerador_id",
+        sequenceName="sinapses_id_seq",
+        allocationSize=1
+
+    )
     protected Long id;
 
     protected Integer matricula;
 
-    @ManyToOne
-    protected Aluno aluno;
+    /*@ManyToOne
+    protected Aluno aluno;*/
 
     protected String titulo;
     protected String descricao;
     protected String categoria;
 
-    protected LocalDate data;
+    protected LocalDate dataCriacao;
+    protected LocalDate dataAtualizacao;
     protected Boolean ativo;
 
     protected String link;
@@ -30,14 +35,14 @@ public class Sinapse {
 
     public Sinapse() {}
 
-    public Sinapse(Long id, Integer matricula, String titulo, String descricao, String categoria, LocalDate data,
-    String link, String keyword, Boolean ativo) {
+    public Sinapse(Long id, Integer matricula, String titulo, String descricao, String categoria, LocalDate dataCriacao, LocalDate dataAtualizacao, String link, String keyword, Boolean ativo) {
         this.id = id;
         this.matricula = matricula;
         this.titulo = titulo;
         this.descricao = descricao;
         this.categoria = categoria;
-        this.data = data;
+        this.dataCriacao = dataCriacao;
+        this.dataAtualizacao = dataAtualizacao;
         this.link = link;
         this.keyword = keyword;
         this.ativo = ativo;
@@ -50,7 +55,8 @@ public class Sinapse {
         this.descricao = requestSinapse.descricao();
         this.matricula = requestSinapse.matricula();
         this.categoria = requestSinapse.categoria();
-        this.data  = requestSinapse.data();
+        this.dataCriacao  = requestSinapse.dataCriacao();
+        this.dataAtualizacao  = requestSinapse.dataAtualizacao();
         this.link = requestSinapse.link();
         this.keyword = requestSinapse.keyword();
         this.ativo = requestSinapse.ativo();
@@ -107,13 +113,22 @@ public class Sinapse {
     }
 
 
-    public LocalDate getData() {
-        return data;
+    public LocalDate getDataCriacao() {
+        return dataCriacao;
     }
 
 
-    public void setData(LocalDate data) {
-        this.data = data;
+    public void setData(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public LocalDate getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+
+    public void setDataAtualizacao(LocalDate dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
     }
 
 

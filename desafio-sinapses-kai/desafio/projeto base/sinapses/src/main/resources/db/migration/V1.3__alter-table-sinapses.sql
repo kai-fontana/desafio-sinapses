@@ -1,0 +1,1 @@
+ALTER TABLE sinapses RENAME COLUMN aluno TO matricula;

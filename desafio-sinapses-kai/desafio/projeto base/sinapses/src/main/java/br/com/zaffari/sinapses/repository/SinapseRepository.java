@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface SinapseRepository extends JpaRepository<Sinapse, Long> {
     List<Sinapse> findAllByAtivoTrue();
+    Sinapse findByIdAndAtivoTrue(Long id);
 }

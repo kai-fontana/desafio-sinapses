@@ -1,4 +1,0 @@
-ALTER TABLE sinapses (
-    ADD COLUMN aluno VARCHAR(100),
-    ADD COLUMN ativo BOOLEAN DEFAULT TRUE,
-)
