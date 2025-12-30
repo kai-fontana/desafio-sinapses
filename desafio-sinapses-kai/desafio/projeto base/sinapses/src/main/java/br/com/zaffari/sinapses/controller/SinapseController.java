@@ -31,9 +31,14 @@ public class SinapseController {
 
     @GetMapping
     public ResponseEntity getAllSinapses() {
-        var allSinapses = sinapseRepository.findAllByActiveTrue();
-        System.out.println(allSinapses);
+        var allSinapses = sinapseRepository.findAllByAtivoTrue();
         return ResponseEntity.ok(allSinapses);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity getOneSinapse(@PathVariable(value = "id") Long id, @RequestBody RequestSinapse data){
+        var oneSinapse = sinapseRepository.findByIdAndAtivoTrue(id);
+        return ResponseEntity.ok(oneSinapse);
     }
 
     @PostMapping
@@ -60,7 +65,7 @@ public class SinapseController {
             sinapse.setDescricao(data.descricao());
             sinapse.setCategoria(data.categoria());
             sinapse.setMatricula(data.matricula());
-            sinapse.setData(data.data());
+            sinapse.setDataAtualizacao(data.dataAtualizacao().now());
             sinapse.setLink(data.link());
             sinapse.setKeyword(data.keyword());
             sinapseRepository.save(sinapse);
@@ -71,6 +76,7 @@ public class SinapseController {
     }
 
   @DeleteMapping("/{id}")
+  @Transactional
     public ResponseEntity deleteSinapse(@PathVariable("id") Long id) {
         Optional<Sinapse> optionalSinapse = sinapseRepository.findById(id);
         if(optionalSinapse.isPresent()) {

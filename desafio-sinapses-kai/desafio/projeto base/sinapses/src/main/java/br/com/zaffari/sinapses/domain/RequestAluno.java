@@ -1,5 +1,6 @@
-package br.com.zaffari.sinapses.domain;
+// package br.com.zaffari.sinapses.domain;
 
-import java.util.List;
+// //import java.util.List;
 
-public record RequestAluno(Long matricula, String nome, List<Sinapse> sinapses) {}
+// //public record RequestAluno(Long matricula, String nome, List<Sinapse> sinapses) {}
+// public record RequestAluno(String nome) {}
