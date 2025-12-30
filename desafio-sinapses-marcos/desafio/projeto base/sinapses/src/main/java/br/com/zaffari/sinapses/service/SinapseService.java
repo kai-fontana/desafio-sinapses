@@ -15,4 +15,3 @@ public interface SinapseService {
     Sinapse salvarSinapse(Sinapse sinapse);
     void deletarSinapse(Sinapse sinapse);
 }
-

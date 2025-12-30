@@ -35,4 +35,3 @@ public class AlunoController {
         return ResponseEntity.status(201).body(responseAluno);
     }
 }
-
