@@ -1,10 +1,10 @@
 package br.com.zaffari.sinapses.service.impl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -27,17 +27,28 @@ public class SinapseImpl implements SinapseService {
 
     @Override
     public List<Sinapse> listarPorCategoria(String categoria){
-        return sinapseRepository.findByCategoriaIgnoreCaseOrderByDataAsc(categoria);
+        return sinapseRepository.findByCategoriaIgnoreCaseOrderByDataCriacaoAsc(categoria);
     }
 
     @Override
     public List<Sinapse> listarPorData(LocalDate data){
-        return sinapseRepository.findByDataOrderByDataAsc(data);
+        return sinapseRepository.findByDataCriacaoOrderByDataCriacaoAsc(data);
     }
 
     @Override
     public List<Sinapse> listarPorPalavraChave(String palavraChave){
         return sinapseRepository.findByDescricaoContainingIgnoreCase(palavraChave);
+    }
+
+    @Override
+    public List<Sinapse> filtrarPorMatrícula(String matricula, List<Sinapse> lista){
+        List<Sinapse> listaFiltrada = new ArrayList<>();
+        for(Sinapse sinapse : lista){
+            if (sinapse.getAluno().getMatricula().equals(matricula)) {
+                listaFiltrada.add(sinapse);
+            }
+        }
+        return listaFiltrada;
     }
 
     @Override

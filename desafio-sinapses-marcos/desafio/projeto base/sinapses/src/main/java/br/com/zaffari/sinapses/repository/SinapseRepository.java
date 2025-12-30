@@ -10,8 +10,8 @@ import br.com.zaffari.sinapses.model.Sinapse;
 
 @Repository
 public interface SinapseRepository extends JpaRepository<Sinapse, Long>{
-    List<Sinapse> findByCategoriaIgnoreCaseOrderByDataAsc(String categoria);
-    List<Sinapse> findByDataOrderByDataAsc(LocalDate data);
+    List<Sinapse> findByCategoriaIgnoreCaseOrderByDataCriacaoAsc(String categoria);
+    List<Sinapse> findByDataCriacaoOrderByDataCriacaoAsc(LocalDate data);
     List<Sinapse> findByDescricaoContainingIgnoreCase(String palavraChave);
     List<Sinapse> findByAlunoMatricula(String matricula);
 }

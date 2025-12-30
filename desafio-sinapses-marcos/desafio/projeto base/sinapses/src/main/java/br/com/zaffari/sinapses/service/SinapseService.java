@@ -10,7 +10,8 @@ public interface SinapseService {
     List<Sinapse> listarPorCategoria(String categoria);
     List<Sinapse> listarPorData(LocalDate data);
     List<Sinapse> listarPorPalavraChave(String palavraChave);
-    Sinapse pegarPorIdPermitido(Long id, String matricula);
+    List<Sinapse> filtrarPorMatrícula(String matricula, List<Sinapse> listaFiltrada);
+    Sinapse pegarPorIdPermitido(Long id, String matricula); 
     Sinapse salvarSinapse(Sinapse sinapse);
     void deletarSinapse(Sinapse sinapse);
 }

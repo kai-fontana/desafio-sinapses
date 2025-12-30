@@ -1,3 +1,5 @@
+
+
 package br.com.zaffari.sinapses.controller;
 
 import org.springframework.beans.BeanUtils;
@@ -7,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.zaffari.sinapses.dtos.AlunoDto;
+import br.com.zaffari.sinapses.dtos.RequestAluno;
+import br.com.zaffari.sinapses.dtos.ResponseAluno;
 import br.com.zaffari.sinapses.model.Aluno;
 import br.com.zaffari.sinapses.service.AlunoService;
 import jakarta.validation.Valid;
@@ -24,11 +27,12 @@ public class AlunoController {
 
 
     @PostMapping
-    public ResponseEntity<Aluno> criarAluno(@Valid @RequestBody AlunoDto alunoDto){
+    public ResponseEntity<ResponseAluno> criarAluno(@Valid @RequestBody RequestAluno alunoDto){
         Aluno aluno = new Aluno();
         BeanUtils.copyProperties(alunoDto, aluno);
         Aluno alunoSalvo = alunoService.salvarAluno(aluno);
-        return ResponseEntity.status(201).body(alunoSalvo);
+        ResponseAluno responseAluno = new ResponseAluno(alunoSalvo.getNome(), alunoSalvo.getMatricula());
+        return ResponseEntity.status(201).body(responseAluno);
     }
 }
 
