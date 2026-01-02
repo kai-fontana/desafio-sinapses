@@ -1,50 +1,77 @@
-// package br.com.zaffari.sinapses.service.impl;
+package br.com.zaffari.sinapses.service.impl;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.data.domain.Sort;
-// import org.springframework.stereotype.Service;
+import java.time.LocalDate;
+import java.util.Optional;
 
-// import br.com.zaffari.sinapses.domain.Sinapse;
-// import br.com.zaffari.sinapses.repository.SinapseRepository;
-// import br.com.zaffari.sinapses.service.SinapseService;
+import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
-// import java.util.List;
+import br.com.zaffari.sinapses.domain.entity.SinapseEntity;
+import br.com.zaffari.sinapses.domain.dto.SinapseMapper;
+import br.com.zaffari.sinapses.domain.dto.SinapseResponseDTO;
+import br.com.zaffari.sinapses.repository.SinapseRepository;
+import br.com.zaffari.sinapses.service.SinapseService;
 
-// @Service
-// public class SinapseImpl implements SinapseService{
+import java.util.List;
 
-//     @Autowired
-//     private SinapseRepository sinapseRepository;
+@Service
+public class SinapseImpl implements SinapseService{
 
-//     /*public SinapseImpl(SinapseRepository sinapseRepository) {
-//         this.sinapseRepository = sinapseRepository;
-//     }*/
+    @Autowired
+    private SinapseRepository sinapseRepository;
 
-//     /* CORRIGIDO */
-//     @Override
-//     // public Sinapse create(Sinapse sinapse) {
-//         return sinapseRepository.save(sinapse);
-//     }
+    private SinapseMapper sinapseMapper = Mappers.getMapper(SinapseMapper.class);
+    @Override 
+    public SinapseResponseDTO listSinapseById(Long id) {
+        SinapseEntity sinapseEntity = sinapseRepository.findByIdAndAtivoTrue(id)
+                .orElseThrow(() -> new RuntimeException("Sinapse não encontrada."));
+        
+        SinapseResponseDTO sinapseResponseDTO =  
+        return;
+    }
 
-//     @Override
-//     public List<Sinapse> list() {
-//         Sort sort = Sort.by("categoria").ascending().and(
-//             Sort.by("dataDeEstudo").descending().and(
-//                 Sort.by("palavrasChave").ascending()
-//             )
-//         );
-//         return sinapseRepository.findAll(sort);
-//     }
+    /*
 
-//     @Override 
-//     public List<Sinapse> update(Sinapse sinapse) {
-//         sinapseRepository.save(sinapse);
-//         return list();
-//     }
+    public SinapseImpl(SinapseRepository sinapseRepository) {
+        this.sinapseRepository = sinapseRepository;
+    }
 
-//     @Override 
-//     public List<Sinapse> delete(Sinapse id) {
-//         sinapseRepository.delete(id);
-//         return list();
-//     }
-// }
+ 
+    @Override
+    public SinapseEntity create(SinapseRequestDTO sinapseDTO) {
+        return sinapseRepository.save(sinapseDTO);
+    }
+
+    @Override
+    public List<SinapseEntity> listAll() {
+        Sort sort = Sort.by("categoria").ascending().and(
+            Sort.by("dataDeEstudo").descending().and(
+                Sort.by("palavrasChave").ascending()
+            )
+        );
+        return sinapseRepository.findAll(sort);
+
+        return sinapseRepository.findAllByAtivoTrue();
+    }
+
+    @Override
+    public SinapseEntity listOne(Long id) {
+        return sinapseRepository.findByIdAndAtivoTrue(id);
+    }
+
+    @Override 
+    public SinapseEntity update(SinapseRequestDTO sinapseDTO, Long id, LocalDate dataAtual) {
+        Optional<SinapseEntity> optionalSinapse = sinapseRepository.findByIdAndAtivoTrue(id);
+        SinapseEntity sinapse = optionalSinapse.get();
+        sinapseDTO.setDataAtualizacao(dataAtual.now());
+        sinapseRepository.save(sinapse);
+        return list();
+    }
+
+    @Override 
+    public SinapseEntity delete(Long id) {
+        sinapseRepository.delete(id);
+        return list();
+    }*/
+}
