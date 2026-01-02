@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,23 +22,23 @@ public class SinapseImpl implements SinapseService {
     }
 
     @Override
-    public List<Sinapse> listarSinapsesPorMatricula(String matricula) {
-        return sinapseRepository.findByAlunoMatricula(matricula);
+    public List<Sinapse> listarSinapsesPorMatricula(String matricula, Pageable pageable) {
+        return sinapseRepository.findByAlunoMatricula(matricula, pageable);
     }
 
     @Override
-    public List<Sinapse> listarPorCategoria(String categoria){
-        return sinapseRepository.findByCategoriaIgnoreCaseOrderByDataCriacaoAsc(categoria);
+    public List<Sinapse> listarPorCategoria(String categoria, Pageable pageable){
+        return sinapseRepository.findByCategoriaIgnoreCase(categoria, pageable);
     }
 
     @Override
-    public List<Sinapse> listarPorData(LocalDate data){
-        return sinapseRepository.findByDataCriacaoOrderByDataCriacaoAsc(data);
+    public List<Sinapse> listarPorData(LocalDate data, Pageable pageable){
+        return sinapseRepository.findByDataCriacaoOrderByDataCriacaoAsc(data, pageable);
     }
 
     @Override
-    public List<Sinapse> listarPorPalavraChave(String palavraChave){
-        return sinapseRepository.findByDescricaoContainingIgnoreCase(palavraChave);
+    public List<Sinapse> listarPorPalavraChave(String palavraChave, Pageable pageable){
+        return sinapseRepository.findByDescricaoContainingIgnoreCase(palavraChave, pageable);
     }
 
     @Override
@@ -54,14 +55,10 @@ public class SinapseImpl implements SinapseService {
     @Override
     public Sinapse pegarPorIdPermitido(Long id, String matricula){
         Sinapse sinapse = sinapseRepository.findById(id)
-        .orElse(null);
-
-        if (sinapse == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id não encontrado");
-        }
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id de sinapse não existente"));
 
         if (!sinapse.getAluno().getMatricula().equals(matricula)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Id vinculado a outra matrícula");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sinapse vinculada a outra matrícula");
         }
         
         

@@ -2,7 +2,9 @@ package br.com.zaffari.sinapses.service.impl;
 
 import java.time.LocalDate;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import br.com.zaffari.sinapses.model.Aluno;
 import br.com.zaffari.sinapses.repository.AlunoRepository;
@@ -27,7 +29,8 @@ public class AlunoImpl implements AlunoService {
 
     @Override
     public Aluno pegarPorMatricula(String matricula){
-        return alunoRepository.findByMatricula(matricula);
+        return alunoRepository.findByMatricula(matricula)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Matrícula não cadastrada no sistema"));
     }
 
 }
