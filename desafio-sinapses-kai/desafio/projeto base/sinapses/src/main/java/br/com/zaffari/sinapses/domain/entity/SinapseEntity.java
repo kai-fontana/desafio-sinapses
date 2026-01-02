@@ -1,11 +1,11 @@
-package br.com.zaffari.sinapses.domain;
+package br.com.zaffari.sinapses.domain.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity(name = "sinapses")
 @Table(name = "sinapses")
-public class Sinapse {
+public class SinapseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gerador_id")
@@ -33,9 +33,9 @@ public class Sinapse {
     protected String link;
     protected String keyword;
 
-    public Sinapse() {}
+    public SinapseEntity() {}
 
-    public Sinapse(Long id, Integer matricula, String titulo, String descricao, String categoria, LocalDate dataCriacao, LocalDate dataAtualizacao, String link, String keyword, Boolean ativo) {
+    public SinapseEntity(Long id, Integer matricula, String titulo, String descricao, String categoria, LocalDate dataCriacao, LocalDate dataAtualizacao, String link, String keyword, Boolean ativo) {
         this.id = id;
         this.matricula = matricula;
         this.titulo = titulo;
@@ -49,7 +49,7 @@ public class Sinapse {
     }
 
 
-    public Sinapse(RequestSinapse requestSinapse){
+    public SinapseEntity(SinapseRequestDTO requestSinapse){
         this.id = requestSinapse.id();
         this.titulo = requestSinapse.titulo();
         this.descricao = requestSinapse.descricao();

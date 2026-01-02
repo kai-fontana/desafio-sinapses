@@ -1,3 +1,4 @@
+package br.com.zaffari.sinapses.domain.dto;
 // package br.com.zaffari.sinapses.domain;
 
 // //import java.util.List;

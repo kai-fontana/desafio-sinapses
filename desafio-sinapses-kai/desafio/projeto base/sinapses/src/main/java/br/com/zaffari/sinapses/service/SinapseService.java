@@ -1,15 +1,21 @@
-// package br.com.zaffari.sinapses.service;
+package br.com.zaffari.sinapses.service;
 
-// import java.util.List;
+//import java.util.List;
 
-// import br.com.zaffari.sinapses.domain.Sinapse;
+//import br.com.zaffari.sinapses.domain.RequestSinapse;
 
-// public interface SinapseService {
-//     public Sinapse create(Sinapse sinapse);
+import br.com.zaffari.sinapses.domain.dto.SinapseResponseDTO;
 
-//     public List<Sinapse> list();
+public interface SinapseService {
+    public SinapseResponseDTO listSinapseById(Long id);
 
-//     public List<Sinapse> update(Sinapse sinapse);
+    /*public SinapseEntity create(SinapseRequestDTO sinapseDTO);
 
-//     public List<Sinapse> delete(Sinapse id);
-// }
+    public List<SinapseEntity> listAll();
+
+    public SinapseEntity listOne(Long id);
+
+    public SinapseEntity update(Long id);
+
+    public SinapseEntity delete(Long id);*/
+}
