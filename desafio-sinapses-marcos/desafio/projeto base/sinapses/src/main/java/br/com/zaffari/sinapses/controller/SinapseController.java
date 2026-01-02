@@ -15,14 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.zaffari.sinapses.dtos.SinapseDto;
+import br.com.zaffari.sinapses.dtos.RequestSinapse;
+import br.com.zaffari.sinapses.dtos.ResponseSinapse;
 import br.com.zaffari.sinapses.model.Sinapse;
 import br.com.zaffari.sinapses.service.AlunoService;
 import br.com.zaffari.sinapses.service.SinapseService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/alunos/{matricula}/sinapses")
+@RequestMapping("/{matricula}/sinapses")
 public class SinapseController {
     SinapseService sinapseService;
     AlunoService alunoService;
@@ -36,16 +37,20 @@ public class SinapseController {
     @GetMapping
     public ResponseEntity<List<Sinapse>> listarSinapses(@PathVariable("matricula") String matricula,
     @RequestParam(value = "categoria", required = false) String categoria, 
-    @RequestParam(value = "data", required = false) LocalDate data,
+    @RequestParam(value = "dataCriacao", required = false) LocalDate dataCriacao,
     @RequestParam(value = "palavraChave", required = false) String palavraChave){
         List<Sinapse> listaSinapses;
-        //Queryteria
+        //Criteria
         if (categoria != null) {
-            listaSinapses = sinapseService.listarPorCategoria(categoria);
-        } else if (data != null) {
-            listaSinapses = sinapseService.listarPorData(data);
+            List<Sinapse> lista = sinapseService.listarPorCategoria(categoria);
+            listaSinapses = sinapseService.filtrarPorMatrícula(matricula, lista);
+            
+        } else if (dataCriacao != null) {
+            List<Sinapse> lista = sinapseService.listarPorData(dataCriacao);
+            listaSinapses = sinapseService.filtrarPorMatrícula(matricula, lista);
         } else if (palavraChave != null){
-            listaSinapses = sinapseService.listarPorPalavraChave(palavraChave);
+            List<Sinapse> lista = sinapseService.listarPorPalavraChave(palavraChave);
+            listaSinapses = sinapseService.filtrarPorMatrícula(matricula, lista);
         } else {
            listaSinapses = sinapseService.listarSinapsesPorMatricula(matricula);
         }
@@ -63,31 +68,38 @@ public class SinapseController {
     }
 
     @PostMapping()
-    public ResponseEntity<Sinapse> criarSinapse (@PathVariable("matricula") String matricula, 
-    @Valid @RequestBody SinapseDto sinapseDto){
+    public ResponseEntity<ResponseSinapse> criarSinapse (@PathVariable("matricula") String matricula, 
+    @Valid @RequestBody RequestSinapse requestSinapse){
         Sinapse sinapse = new Sinapse();
-        BeanUtils.copyProperties(sinapseDto, sinapse);
-        sinapse.setData(LocalDate.now());
+        BeanUtils.copyProperties(requestSinapse, sinapse);
+        sinapse.setDataCriacao(LocalDate.now());
+        sinapse.setUltimaAtualizacao(LocalDate.now());
         sinapse.setAluno(alunoService.pegarPorMatricula(matricula));
         if (sinapse.getAluno() == null) {
             return ResponseEntity.notFound().build();
     }
         Sinapse sinapseSalva = sinapseService.salvarSinapse(sinapse);
-        //retornar o dto após salvo
+        ResponseSinapse responseSinapse = new ResponseSinapse(sinapseSalva.getId(), sinapseSalva.getAluno().getMatricula(),
+            sinapseSalva.getTitulo(), sinapseSalva.getDescricao(), sinapseSalva.getCategoria(), sinapseSalva.getDataCriacao(),
+            sinapseSalva.getUltimaAtualizacao(), sinapseSalva.getUrlConteudo());
 
-        return ResponseEntity.status(201).body(sinapseSalva);
+        return ResponseEntity.status(201).body(responseSinapse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Sinapse> editarSinapse(@PathVariable("matricula") String matricula, @PathVariable(value = "id") Long id, 
-    @Valid @RequestBody SinapseDto sinapseDto){
+    public ResponseEntity<ResponseSinapse> editarSinapse(@PathVariable("matricula") String matricula, @PathVariable(value = "id") Long id, 
+    @Valid @RequestBody RequestSinapse requestSinapse){
         Sinapse sinapse = sinapseService.pegarPorIdPermitido(id, matricula);
 
-        BeanUtils.copyProperties(sinapseDto, sinapse);
+        BeanUtils.copyProperties(requestSinapse, sinapse);
         sinapse.setId(id);
-        sinapse.setData(LocalDate.now());
-        Sinapse sinapseAtualida = sinapseService.salvarSinapse(sinapse);
-        return ResponseEntity.ok().body(sinapseAtualida);
+        sinapse.setUltimaAtualizacao(LocalDate.now());
+        Sinapse sinapseAtualizada = sinapseService.salvarSinapse(sinapse);
+        ResponseSinapse responseSinapse = new ResponseSinapse(sinapseAtualizada.getId(), sinapseAtualizada.getAluno().getMatricula(),
+            sinapseAtualizada.getTitulo(), sinapseAtualizada.getDescricao(), sinapseAtualizada.getCategoria(), sinapseAtualizada.getDataCriacao(),
+            sinapseAtualizada.getUltimaAtualizacao(), sinapseAtualizada.getUrlConteudo());
+
+        return ResponseEntity.ok().body(responseSinapse);
     }
 
     @DeleteMapping("/{id}")
