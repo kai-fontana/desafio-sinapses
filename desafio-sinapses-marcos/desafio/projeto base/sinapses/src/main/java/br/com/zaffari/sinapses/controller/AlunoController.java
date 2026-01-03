@@ -1,5 +1,3 @@
-
-
 package br.com.zaffari.sinapses.controller;
 
 import org.springframework.beans.BeanUtils;
@@ -9,29 +7,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.zaffari.sinapses.dtos.RequestAluno;
-import br.com.zaffari.sinapses.dtos.ResponseAluno;
+import br.com.zaffari.sinapses.dtos.AlunoRequest;
+import br.com.zaffari.sinapses.dtos.AlunoResponse;
 import br.com.zaffari.sinapses.model.Aluno;
-import br.com.zaffari.sinapses.service.impl.AlunoImpl;
+import br.com.zaffari.sinapses.service.AlunoService;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/alunos")
 public class AlunoController {
-    AlunoImpl alunoImpl;
+    private final AlunoService alunoService;
 
-    public AlunoController(AlunoImpl alunoImpl) {
-        this.alunoImpl = alunoImpl;
+    public AlunoController(AlunoService alunoService) {
+        this.alunoService = alunoService;
     }
 
 
 
     @PostMapping
-    public ResponseEntity<ResponseAluno> criarAluno(@Valid @RequestBody RequestAluno alunoDto){
+    public ResponseEntity<AlunoResponse> criarAluno(@Valid @RequestBody AlunoRequest alunoDto){
         Aluno aluno = new Aluno();
         BeanUtils.copyProperties(alunoDto, aluno);
-        Aluno alunoSalvo = alunoImpl.salvarAluno(aluno);
-        ResponseAluno responseAluno = new ResponseAluno(alunoSalvo.getNome(), alunoSalvo.getMatricula());
+        Aluno alunoSalvo = alunoService.salvarAluno(aluno);
+        AlunoResponse responseAluno = new AlunoResponse(alunoSalvo.getNome(), alunoSalvo.getMatricula());
         return ResponseEntity.status(201).body(responseAluno);
     }
 }

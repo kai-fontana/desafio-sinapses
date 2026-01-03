@@ -1,59 +1,67 @@
 package br.com.zaffari.sinapses.service.impl;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import br.com.zaffari.sinapses.dtos.SinapseRequest;
+import br.com.zaffari.sinapses.dtos.SinapseResponse;
+import br.com.zaffari.sinapses.mapper.SinapseMapper;
+import br.com.zaffari.sinapses.model.Aluno;
 import br.com.zaffari.sinapses.model.Sinapse;
+import br.com.zaffari.sinapses.repository.AlunoRepository;
 import br.com.zaffari.sinapses.repository.SinapseRepository;
 import br.com.zaffari.sinapses.service.SinapseService;
 
 @Service
 public class SinapseImpl implements SinapseService {
-    SinapseRepository sinapseRepository;
+    private final SinapseRepository sinapseRepository;
+    private final SinapseMapper sinapseMapper;
+    private final AlunoRepository alunoRepository;
 
-    public SinapseImpl(SinapseRepository sinapseRepository) {
+    
+
+    public SinapseImpl(SinapseRepository sinapseRepository, SinapseMapper sinapseMapper,
+            AlunoRepository alunoRepository) {
         this.sinapseRepository = sinapseRepository;
+        this.sinapseMapper = sinapseMapper;
+        this.alunoRepository = alunoRepository;
     }
 
     @Override
-    public List<Sinapse> listarSinapsesPorMatricula(String matricula, Pageable pageable) {
-        return sinapseRepository.findByAlunoMatricula(matricula, pageable);
+    public Page<SinapseResponse> listarSinapsesPorMatricula(String matricula, Pageable pageable) {
+        Page<Sinapse> sinapsesFiltradas = sinapseRepository.findByAlunoMatricula(matricula, pageable);
+
+        return sinapsesFiltradas.map(sinapseMapper::paraResponse);
     }
 
     @Override
-    public List<Sinapse> listarPorCategoria(String categoria, Pageable pageable){
-        return sinapseRepository.findByCategoriaIgnoreCase(categoria, pageable);
+    public Page<SinapseResponse> listarPorCategoria(String categoria, String matricula, Pageable pageable) {
+        Page<Sinapse> sinapsesFiltradas = sinapseRepository.findByCategoriaIgnoreCaseAndAlunoMatricula(categoria, matricula, pageable);
+    
+        return sinapsesFiltradas.map(sinapseMapper::paraResponse);
+}
+
+    @Override
+    public Page<SinapseResponse> listarPorData(LocalDate data, String matricula, Pageable pageable){
+        Page<Sinapse> sinapsesFiltradas = sinapseRepository.findByDataCriacaoAndAlunoMatricula(data, matricula, pageable);
+    
+        return sinapsesFiltradas.map(sinapseMapper::paraResponse);
     }
 
     @Override
-    public List<Sinapse> listarPorData(LocalDate data, Pageable pageable){
-        return sinapseRepository.findByDataCriacaoOrderByDataCriacaoAsc(data, pageable);
+    public Page<SinapseResponse> listarPorPalavraChave(String palavraChave, String matricula, Pageable pageable){
+        Page<Sinapse> sinapsesFiltradas = sinapseRepository.findByDescricaoIgnoreCaseAndAlunoMatricula(palavraChave, matricula, pageable);
+        return sinapsesFiltradas.map(sinapseMapper::paraResponse);
     }
 
-    @Override
-    public List<Sinapse> listarPorPalavraChave(String palavraChave, Pageable pageable){
-        return sinapseRepository.findByDescricaoContainingIgnoreCase(palavraChave, pageable);
-    }
 
     @Override
-    public List<Sinapse> filtrarPorMatrícula(String matricula, List<Sinapse> lista){
-        List<Sinapse> listaFiltrada = new ArrayList<>();
-        for(Sinapse sinapse : lista){
-            if (sinapse.getAluno().getMatricula().equals(matricula)) {
-                listaFiltrada.add(sinapse);
-            }
-        }
-        return listaFiltrada;
-    }
-
-    @Override
-    public Sinapse pegarPorIdPermitido(Long id, String matricula){
+    public SinapseResponse pegarPorIdPermitido(Long id, String matricula){
         Sinapse sinapse = sinapseRepository.findById(id)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id de sinapse não existente"));
 
@@ -62,16 +70,48 @@ public class SinapseImpl implements SinapseService {
         }
         
         
-        return sinapse;
+        return sinapseMapper.paraResponse(sinapse);
     }
 
     @Override
-    public Sinapse salvarSinapse(Sinapse sinapse) {
-        return sinapseRepository.save(sinapse);
+    public SinapseResponse salvarSinapse(SinapseRequest sinapseRequest, String matricula) {
+        Sinapse sinapse = sinapseMapper.paraEntidade(sinapseRequest);
+        Aluno aluno = alunoRepository.findByMatricula(matricula)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aluno não encontrado pela matrícula"));
+
+        sinapse.setAluno(aluno);
+        if (sinapse.getDataCriacao() == null) {
+            sinapse.setDataCriacao(LocalDate.now());
+        }
+        sinapse.setUltimaAtualizacao(LocalDate.now());
+        Sinapse sinapseSalva = sinapseRepository.save(sinapse);
+
+        return sinapseMapper.paraResponse(sinapseSalva);
     }
 
     @Override
-    public void deletarSinapse(Sinapse sinapse){
+    public SinapseResponse atualizarSinapse(Long id, SinapseRequest sinapseRequest) {
+        Sinapse sinapse = sinapseRepository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sinapse não encontrada."));
+
+        sinapse.setTitulo(sinapseRequest.titulo());
+        sinapse.setDescricao(sinapseRequest.descricao());
+        sinapse.setCategoria(sinapseRequest.categoria());
+        sinapse.setUltimaAtualizacao(LocalDate.now());
+
+        Sinapse sinapseSalva = sinapseRepository.save(sinapse);
+
+        return sinapseMapper.paraResponse(sinapseSalva);
+}
+
+    @Override
+    public void deletarSinapse(Long id, String matricula){
+        Sinapse sinapse = sinapseRepository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sinapse não encontrada."));
+
+        if (!sinapse.getAluno().getMatricula().equals(matricula)) {
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Esta sinapse está vinculada a outra matrícula.");
+        }
         sinapseRepository.delete(sinapse);
     }
     
