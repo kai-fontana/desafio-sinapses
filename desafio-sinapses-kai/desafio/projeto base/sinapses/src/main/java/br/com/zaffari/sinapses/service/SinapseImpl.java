@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -22,8 +23,8 @@ public class SinapseImpl implements SinapseService {
     private SinapseMapper sinapseMapper;
 
     @Override
-    public Page<SinapseResponseDTO> listarTodasAtivas(String categoria, String keyword, Pageable pageable) {
-        Page<SinapseEntity> entities = sinapseRepository.findByAtivoTrueAndCategoriaContainingIgnoreCaseAndTituloContainingIgnoreCase(categoria, keyword, pageable);
+    public Page<SinapseResponseDTO> listarTodasAtivas(String categoria, String keyword, LocalDateTime data, Pageable pageable) {
+        Page<SinapseEntity> entities = sinapseRepository.findByAtivoTrueAndCategoriaContainingIgnoreCaseAndTituloContainingIgnoreCase(categoria, keyword, data, pageable);
         return entities.map(sinapseMapper::mapSinapseEntityToSinapseResponse);
     }
 

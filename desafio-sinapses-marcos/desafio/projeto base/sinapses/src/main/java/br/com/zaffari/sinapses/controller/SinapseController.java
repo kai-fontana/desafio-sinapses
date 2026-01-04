@@ -1,9 +1,10 @@
 package br.com.zaffari.sinapses.controller;
 
 import java.time.LocalDate;
-import java.util.List;
 
-import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,44 +16,41 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.zaffari.sinapses.dtos.RequestSinapse;
-import br.com.zaffari.sinapses.dtos.ResponseSinapse;
-import br.com.zaffari.sinapses.model.Sinapse;
-import br.com.zaffari.sinapses.service.AlunoService;
-import br.com.zaffari.sinapses.service.SinapseService;
+import br.com.zaffari.sinapses.dtos.SinapseRequest;
+import br.com.zaffari.sinapses.dtos.SinapseResponse;
+import br.com.zaffari.sinapses.service.impl.SinapseImpl;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/{matricula}/sinapses")
 public class SinapseController {
-    SinapseService sinapseService;
-    AlunoService alunoService;
+    private final SinapseImpl sinapseService;
 
-    public SinapseController(SinapseService sinapseService, AlunoService alunoService) {
+    public SinapseController(SinapseImpl sinapseService) {
         this.sinapseService = sinapseService;
-        this.alunoService = alunoService;
     }
 
 
     @GetMapping
-    public ResponseEntity<List<Sinapse>> listarSinapses(@PathVariable("matricula") String matricula,
+    public ResponseEntity<Page<SinapseResponse>> listarSinapses(@PathVariable("matricula") String matricula, 
+    @PageableDefault(page = 0, size = 10, sort = "id")Pageable pageable,
     @RequestParam(value = "categoria", required = false) String categoria, 
-    @RequestParam(value = "dataCriacao", required = false) LocalDate dataCriacao,
+    @RequestParam(value = "data", required = false) LocalDate dataCriacao,
     @RequestParam(value = "palavraChave", required = false) String palavraChave){
-        List<Sinapse> listaSinapses;
+        Page<SinapseResponse> listaSinapses;
         //Criteria
         if (categoria != null) {
-            List<Sinapse> lista = sinapseService.listarPorCategoria(categoria);
-            listaSinapses = sinapseService.filtrarPorMatrícula(matricula, lista);
+            listaSinapses = sinapseService.listarPorCategoria(categoria, matricula, pageable);
+            
             
         } else if (dataCriacao != null) {
-            List<Sinapse> lista = sinapseService.listarPorData(dataCriacao);
-            listaSinapses = sinapseService.filtrarPorMatrícula(matricula, lista);
+            listaSinapses = sinapseService.listarPorData(dataCriacao, matricula, pageable);
+            
         } else if (palavraChave != null){
-            List<Sinapse> lista = sinapseService.listarPorPalavraChave(palavraChave);
-            listaSinapses = sinapseService.filtrarPorMatrícula(matricula, lista);
+            listaSinapses = sinapseService.listarPorPalavraChave(palavraChave, matricula, pageable);
+            
         } else {
-           listaSinapses = sinapseService.listarSinapsesPorMatricula(matricula);
+           listaSinapses = sinapseService.listarSinapsesPorMatricula(matricula, pageable);
         }
         if (listaSinapses.isEmpty()) {
             return ResponseEntity.status(204).build();
@@ -61,52 +59,31 @@ public class SinapseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Sinapse> acharSinapse(@PathVariable("matricula") String matricula, @PathVariable("id") Long id){
-        Sinapse sinapse = sinapseService.pegarPorIdPermitido(id, matricula);
+    public ResponseEntity<SinapseResponse> acharSinapse(@PathVariable("matricula") String matricula, @PathVariable("id") Long id){
+        SinapseResponse sinapseResponse = sinapseService.pegarPorIdPermitido(id, matricula);
 
-        return ResponseEntity.ok(sinapse);
+        return ResponseEntity.ok(sinapseResponse);
     }
 
     @PostMapping()
-    public ResponseEntity<ResponseSinapse> criarSinapse (@PathVariable("matricula") String matricula, 
-    @Valid @RequestBody RequestSinapse requestSinapse){
-        Sinapse sinapse = new Sinapse();
-        BeanUtils.copyProperties(requestSinapse, sinapse);
-        sinapse.setDataCriacao(LocalDate.now());
-        sinapse.setUltimaAtualizacao(LocalDate.now());
-        sinapse.setAluno(alunoService.pegarPorMatricula(matricula));
-        if (sinapse.getAluno() == null) {
-            return ResponseEntity.notFound().build();
-    }
-        Sinapse sinapseSalva = sinapseService.salvarSinapse(sinapse);
-        ResponseSinapse responseSinapse = new ResponseSinapse(sinapseSalva.getId(), sinapseSalva.getAluno().getMatricula(),
-            sinapseSalva.getTitulo(), sinapseSalva.getDescricao(), sinapseSalva.getCategoria(), sinapseSalva.getDataCriacao(),
-            sinapseSalva.getUltimaAtualizacao(), sinapseSalva.getUrlConteudo());
-
-        return ResponseEntity.status(201).body(responseSinapse);
+    public ResponseEntity<SinapseResponse> criarSinapse (@PathVariable("matricula") String matricula, 
+    @Valid @RequestBody SinapseRequest sinapseRequest){
+        SinapseResponse sinapseResponse = sinapseService.salvarSinapse(sinapseRequest, matricula);
+    
+        return ResponseEntity.status(201).body(sinapseResponse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseSinapse> editarSinapse(@PathVariable("matricula") String matricula, @PathVariable(value = "id") Long id, 
-    @Valid @RequestBody RequestSinapse requestSinapse){
-        Sinapse sinapse = sinapseService.pegarPorIdPermitido(id, matricula);
-
-        BeanUtils.copyProperties(requestSinapse, sinapse);
-        sinapse.setId(id);
-        sinapse.setUltimaAtualizacao(LocalDate.now());
-        Sinapse sinapseAtualizada = sinapseService.salvarSinapse(sinapse);
-        ResponseSinapse responseSinapse = new ResponseSinapse(sinapseAtualizada.getId(), sinapseAtualizada.getAluno().getMatricula(),
-            sinapseAtualizada.getTitulo(), sinapseAtualizada.getDescricao(), sinapseAtualizada.getCategoria(), sinapseAtualizada.getDataCriacao(),
-            sinapseAtualizada.getUltimaAtualizacao(), sinapseAtualizada.getUrlConteudo());
-
-        return ResponseEntity.ok().body(responseSinapse);
+    public ResponseEntity<SinapseResponse> editarSinapse(@PathVariable(value = "id") Long id, 
+    @Valid @RequestBody SinapseRequest sinapseRequest){
+        
+        SinapseResponse sinapseResponse = sinapseService.atualizarSinapse(id, sinapseRequest);
+        return ResponseEntity.ok().body(sinapseResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deletarSinapse(@PathVariable("matricula") String matricula, @PathVariable(value = "id") Long id){
-        Sinapse sinapse = sinapseService.pegarPorIdPermitido(id, matricula);
-
-        sinapseService.deletarSinapse(sinapse);
+    public ResponseEntity<Void> deletarSinapse(@PathVariable("matricula") String matricula, @PathVariable(value = "id") Long id){
+        sinapseService.deletarSinapse(id, matricula);
         return ResponseEntity.status(204).build();
     }
 }

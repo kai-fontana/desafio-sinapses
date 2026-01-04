@@ -38,10 +38,11 @@ public class SinapseController {
     public ResponseEntity<Page<SinapseResponseDTO>> getAllSinapses(
             @RequestParam(required = false) String categoria,
             @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) LocalDateTime data,
             @PageableDefault(size = 10, sort = "dataCriacao", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         try {
-            Page<SinapseResponseDTO> response = sinapseService.listarTodasAtivas(categoria, keyword, pageable);
+            Page<SinapseResponseDTO> response = sinapseService.listarTodasAtivas(categoria, keyword, data, pageable);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
