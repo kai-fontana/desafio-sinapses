@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/desafio-sinapses-kai.iml" filepath="$PROJECT_DIR$/.idea/desafio-sinapses-kai.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sinapses.main.iml" filepath="$PROJECT_DIR$/.idea/modules/sinapses.main.iml" />
     </modules>
   </component>
 </project>

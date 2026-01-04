@@ -9,5 +9,5 @@
 
 // @Repository
 // public interface AlunoRepository extends JpaRepository<Aluno, Long>{
-//     //List<Aluno> findAllByAtivoTrue();
+//     //List<Aluno> findByAtivoTrueAndCategoriaContainingIgnoreCaseAndTituloContainingIgnoreCase();
 // }

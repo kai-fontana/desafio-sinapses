@@ -1,5 +1,9 @@
 package br.com.zaffari.sinapses.domain.dto;
 
-import java.time.LocalDate;
+import jakarta.validation.constraints.NotBlank;
 
-public record SinapseRequestDTO(Integer matricula, String titulo, String descricao, String categoria, LocalDate dataCriacao, String link, String keyword) {}
+import java.time.LocalDateTime;
+
+public record SinapseRequestDTO(Integer matricula,
+                                @NotBlank(message = "O título é obrigatório")
+                                String titulo, String descricao, String categoria, String link) {}

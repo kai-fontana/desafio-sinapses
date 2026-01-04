@@ -1,21 +1,18 @@
 package br.com.zaffari.sinapses.service;
 
-//import java.util.List;
-
-//import br.com.zaffari.sinapses.domain.RequestSinapse;
-
+import br.com.zaffari.sinapses.domain.dto.SinapseRequestDTO;
 import br.com.zaffari.sinapses.domain.dto.SinapseResponseDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.*;
+
 
 public interface SinapseService {
-    public SinapseResponseDTO listSinapseById(Long id);
+    Page<SinapseResponseDTO> listarTodasAtivas(String categoria, String keyword, Pageable pageable);
 
-    /*public SinapseEntity create(SinapseRequestDTO sinapseDTO);
-
-    public List<SinapseEntity> listAll();
-
-    public SinapseEntity listOne(Long id);
-
-    public SinapseEntity update(Long id);
-
-    public SinapseEntity delete(Long id);*/
+    SinapseResponseDTO listarPorIdTodasAtivas(Long id);
+    SinapseResponseDTO salvar(SinapseRequestDTO request);
+    SinapseResponseDTO atualizar(Long id, SinapseRequestDTO request);
+    void excluir(Long id);
 }

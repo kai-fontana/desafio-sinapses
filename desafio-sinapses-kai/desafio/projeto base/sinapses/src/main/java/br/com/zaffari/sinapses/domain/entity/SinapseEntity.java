@@ -2,6 +2,7 @@ package br.com.zaffari.sinapses.domain.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity(name = "sinapses")
 @Table(name = "sinapses")
@@ -13,8 +14,8 @@ public class SinapseEntity {
         name="gerador_id",
         sequenceName="sinapses_id_seq",
         allocationSize=1
-
     )
+
     protected Long id;
 
     protected Integer matricula;
@@ -26,8 +27,8 @@ public class SinapseEntity {
     protected String descricao;
     protected String categoria;
 
-    protected LocalDate dataCriacao;
-    protected LocalDate dataAtualizacao;
+    protected LocalDateTime dataCriacao;
+    protected LocalDateTime dataAtualizacao;
     protected Boolean ativo;
 
     protected String link;
@@ -35,7 +36,7 @@ public class SinapseEntity {
 
     public SinapseEntity() {}
 
-    public SinapseEntity(Long id, Integer matricula, String titulo, String descricao, String categoria, LocalDate dataCriacao, LocalDate dataAtualizacao, String link, String keyword, Boolean ativo) {
+    public SinapseEntity(Long id, Integer matricula, String titulo, String descricao, String categoria, LocalDateTime dataCriacao, LocalDateTime dataAtualizacao, String link, String keyword, Boolean ativo) {
         this.id = id;
         this.matricula = matricula;
         this.titulo = titulo;
@@ -49,7 +50,7 @@ public class SinapseEntity {
     }
 
 
-    public SinapseEntity(SinapseRequestDTO requestSinapse){
+    /*public SinapseEntity(SinapseRequestDTO requestSinapse){
         this.id = requestSinapse.id();
         this.titulo = requestSinapse.titulo();
         this.descricao = requestSinapse.descricao();
@@ -60,7 +61,7 @@ public class SinapseEntity {
         this.link = requestSinapse.link();
         this.keyword = requestSinapse.keyword();
         this.ativo = requestSinapse.ativo();
-    }
+    }*/
 
 
     public Long getId() {
@@ -113,21 +114,21 @@ public class SinapseEntity {
     }
 
 
-    public LocalDate getDataCriacao() {
+    public LocalDateTime getDataCriacao() {
         return dataCriacao;
     }
 
 
-    public void setData(LocalDate dataCriacao) {
+    public void setDataCriacao(LocalDateTime dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
 
-    public LocalDate getDataAtualizacao() {
+    public LocalDateTime getDataAtualizacao() {
         return dataAtualizacao;
     }
 
 
-    public void setDataAtualizacao(LocalDate dataAtualizacao) {
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
         this.dataAtualizacao = dataAtualizacao;
     }
 

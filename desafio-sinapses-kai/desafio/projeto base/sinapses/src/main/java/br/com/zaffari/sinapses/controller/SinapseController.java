@@ -1,102 +1,99 @@
 package br.com.zaffari.sinapses.controller;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import br.com.zaffari.sinapses.domain.Sinapse;
-import br.com.zaffari.sinapses.domain.RequestSinapse;
-import br.com.zaffari.sinapses.repository.SinapseRepository;
+import br.com.zaffari.sinapses.domain.dto.SinapseRequestDTO;
+import br.com.zaffari.sinapses.domain.dto.SinapseResponseDTO;
+import br.com.zaffari.sinapses.domain.entity.SinapseEntity;
+import br.com.zaffari.sinapses.domain.mapper.SinapseMapper;
+import br.com.zaffari.sinapses.service.SinapseService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import org.apache.coyote.Response;
+import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 
 /*
-* Arrumar a matrícula
+ * Arrumar a matrícula
  */
 @RestController
 @RequestMapping("/sinapses")
 public class SinapseController {
-
     @Autowired
-    protected SinapseRepository sinapseRepository;
+    protected SinapseService sinapseService;
 
     @GetMapping
-    public ResponseEntity getAllSinapses(@RequestParam int numeroPagina,
-                                         @RequestParam int tamanhoDaPagina) {
-        PageRequest.ok(numeroPagina, tamanhoDaPagina);
-        var allSinapses = sinapseRepository.findAllByAtivoTrue();
-        return ResponseEntity.ok(allSinapses);
+    public ResponseEntity<Page<SinapseResponseDTO>> getAllSinapses(
+            @RequestParam(required = false) String categoria,
+            @RequestParam(required = false) String keyword,
+            @PageableDefault(size = 10, sort = "dataCriacao", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        try {
+            Page<SinapseResponseDTO> response = sinapseService.listarTodasAtivas(categoria, keyword, pageable);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getOneSinapse(@PathVariable(value = "id") Long id, @RequestBody SinapseRequestDTO data){
-        var oneSinapse = sinapseRepository.findByIdAndAtivoTrue(id);
-        return ResponseEntity.ok(oneSinapse);
+    public ResponseEntity<SinapseResponseDTO> getOneSinapse(@PathVariable(value = "id") Long id){
+
+        try {
+            SinapseResponseDTO response = sinapseService.listarPorIdTodasAtivas(id);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     @PostMapping
-    public ResponseEntity createSinapse(@RequestBody SinapseRequestDTO data) {
+    public ResponseEntity<SinapseResponseDTO> createSinapse(@Valid @RequestBody SinapseRequestDTO sinapseRequest) {
 
-        SinapseEntity sinapse = new SinapseEntity(data);
-        if (data != null) {
-            sinapseRepository.save(sinapse);
-            return ResponseEntity.ok("Sinapse criada com sucesso.");
-            
-        } else {
+        try {
+            SinapseResponseDTO response = sinapseService.salvar(sinapseRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
-    
+
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity updateSinapse(@PathVariable(value = "id") Long id, @RequestBody SinapseRequestDTO data) {
-        Optional<SinapseEntity> optionalSinapse = sinapseRepository.findById(id);
-        if(optionalSinapse.isPresent()) {
-            SinapseEntity sinapse = optionalSinapse.get();
-            sinapse.setTitulo(data.titulo());
-            sinapse.setDescricao(data.descricao());
-            sinapse.setCategoria(data.categoria());
-            sinapse.setMatricula(data.matricula());
-            sinapse.setDataAtualizacao(data.dataAtualizacao().now());
-            sinapse.setLink(data.link());
-            sinapse.setKeyword(data.keyword());
-            sinapseRepository.save(sinapse);
-            return ResponseEntity.ok("Sinapse atualizada com sucesso.");
-        } else {
+    public ResponseEntity<SinapseResponseDTO> updateSinapse(@PathVariable(value = "id") Long id, @RequestBody SinapseRequestDTO sinapseRequest) {
+
+        try {
+            SinapseResponseDTO responseAtualizada = sinapseService.atualizar(id, sinapseRequest);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
+
     }
 
   @DeleteMapping("/{id}")
   @Transactional
-    public ResponseEntity deleteSinapse(@PathVariable("id") Long id) {
-        Optional<SinapseEntity> optionalSinapse = sinapseRepository.findById(id);
-        if(optionalSinapse.isPresent()) {
-            SinapseEntity sinapse = optionalSinapse.get();
-            sinapse.setAtivo(false);
-   
-            return ResponseEntity.noContent().build();
-        } else {
+  public ResponseEntity<String> deleteSinapse(@PathVariable("id") Long id) {
+        try {
+            sinapseService.excluir(id);
+            return ResponseEntity.ok("Sinapse deletada com sucesso.");
+        } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
-
-
-
-        /* Sinapse sinapse = sinapseRepository.findById(id)
-        .orElse(null);
-        sinapseRepository.delete(sinapse);
-        return ResponseEntity.ok("Sinapse excluída com sucesso."); */
-    }
+  }
 }
